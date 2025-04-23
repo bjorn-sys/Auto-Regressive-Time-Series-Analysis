@@ -1,5 +1,5 @@
-# Auto-Regressive-Time-Series-Analysis
-AN AUTOREGRESSIVE TIME SERIES ANALYSIS is a kind of time series analysis prediction made assuming the enviroment is stable
+# Auto-Regressive-model-Time-Series-Analysis
+AN AUTOREGRESSIVE MODEL TIME SERIES ANALYSIS is a kind of time series analysis prediction made assuming the enviroment is stable
 it relies on values that are relatively stable overtime to get an accurate prediction
 The Readings we predicted was the Air-Quality by using time stamp and the already recorded PM2.5 readings in the data
 the dataset used had some columns....
