@@ -1,55 +1,133 @@
-# Auto-Regressive-model-Time-Series-Analysis
-AN AUTOREGRESSIVE MODEL TIME SERIES ANALYSIS is a kind of time series analysis prediction made assuming the enviroment is stable
-it relies on values that are relatively stable overtime to get an accurate prediction
-The Readings we predicted was the Air-Quality by using time stamp and the already recorded PM2.5 readings in the data
-the dataset used had some columns....
-imported all the libraries needed for the analysis...
-
-sensor_id.....the sensor identity number
-
-sensor_type.......the type of sensor that was used in the measurements
-
-location.........location where the measurement was collected
-
-lat..............latitude
-
-lon...............longitude
-
-timestamp...........time and date the measurement was collected
-
-value_type...........the kind of measurement [P1, HUMIDITY, P2, TEMPERATURE, PRESSURE. HDOP]
-
-value..............the values of the measurement 
+
+🔁 Auto-Regressive Model Time Series Analysis
+
+📘 Overview
+
+This project explores the use of an Auto-Regressive (AR) model for time series forecasting. The goal was to predict air quality (PM2.5 levels) using historical time-stamped data under the assumption of a relatively stable environment. The model leverages past observations to predict future values, relying on autocorrelation within the dataset.
 
 
-in this analysis...only time-stamp and the PM2.5 readings was used...
-I had to filter out the data that wasn't being used...the timestamp was converted to a datetime format because it came as an object,
-and the timezone had to be converted to the designated city [NAIROBI] in africa timezone...after that i needed to resample the data into 1HOUR INTERVALS and used forward fill to fill out the nan values
-i could not fill the nan values with mean oe median bcause in time series analysis we can't fill with that...its like judging the present using the past and the future that we haven't lived.
-converted the data into series...
+---
 
-ACF--------AUTO-CORRELATION FUNCTION plot was used to check how far in the past we can predict the future with...this shows the correlation coefficient of lag-hours
-PACT------PARTIAL AUTO-CORRELATION FUNCTION plot was used to know how many time lags has to be used in prediction
-the ACF plot shows a good correlation from 0-2hours, the dipped and rose again around 11, 12, 22-25 hours
-the PACF plot shows that the lag hours shouldn't exceede the 26 hour mark so that's the lag hours that was used for prediction
-SPLITTING THE DATA----the target column was used as our data set and was splitted between the (y_train)training set[70%] and the (y_test)testing set[30]
-the y_train mean was checked.......10.82
-the mean_absolute_error baseline......6.32
+🧾 Dataset Description
+
+The dataset consists of environmental sensor data with the following columns:
+
+> Focus: For this analysis, only PM2.5 (P2) readings were used along with timestamps.
 
 
-THE AUTOREGRESSIVE MODEL was used in building the model....fitted the y_train and number of lags=26 and then dropped the nan values that was left by the lags
-the mean_absolute_error for the training set.....4.36
-residuals which is the observed values - the predicted values plot showed some errors in the data 
-the mean_absolute_error for the test set was 5.17 which shouldn't be....the result should be a bit closer to 0
 
 
-so i corrected it with WALK-FORWARD-VALIDATION
-Walk-forward validation is a technique used to evaluate the performance of a model on time series data....
-It simulates the real-world scenario where a model is trained on historical data and then used to make predictions on future data.....
-Split data: Divide the data into training and testing sets, with the training set being the earlier part of the data and the testing set being the later part.....
-Train model: Train the model on the training set.....
-Make predictions: Use the trained model to make predictions on the testing set.....
-Evaluate performance: Calculate the error between the predicted values and the actual values in the testing set.....
-Roll forward: Move the training and testing sets forward in time, retrain the model, and repeat the process.....
+---
 
-After the walk-forward-validation was done the test_mean_absolute_error decreased from 5.17 to 3.44
+⚙️ Data Preprocessing
+
+Filtered the dataset to include only P2 values (PM2.5)
+
+Converted the timestamp column from object to datetime format
+
+Localized time to the Africa/Nairobi timezone
+
+Resampled the data to hourly intervals
+
+Used forward-fill (ffill) to fill in missing values — forward fill respects time order and is preferable over mean/median in time series
+
+
+
+---
+
+🛠️ Feature Engineering
+
+Converted the filtered dataset into a series
+
+Applied ACF (Auto-Correlation Function) to assess how far into the past we can predict the future
+
+Applied PACF (Partial Auto-Correlation Function) to determine optimal lag length
+
+
+🔍 ACF & PACF Observations
+
+ACF showed strong correlations up to 2 hours, with notable patterns around lags 11–12 and 22–25
+
+PACF indicated that the effective number of lags should not exceed 26 hours
+
+
+
+---
+
+🔄 Model Training: Auto-Regressive Model (AR)
+
+Training/Test Split:
+
+y_train: 70% of the data
+
+y_test: 30% of the data
+
+
+Baseline Mean of y_train: 10.82
+
+Baseline Mean Absolute Error (MAE): 6.32
+
+AR Model Configuration:
+
+Used 26 lag values
+
+Trained only on y_train
+
+Dropped NaN values introduced by lagging
+
+
+Model Evaluation:
+
+Training MAE: 4.36
+
+Testing MAE: 5.17 — slightly high, indicating overfitting or insufficient generalization
+
+
+
+
+---
+
+🔁 Walk-Forward Validation
+
+To improve model robustness and simulate a real-world deployment scenario, walk-forward validation was implemented.
+
+✅ Steps in Walk-Forward Validation
+
+1. Split: Begin with a standard train/test split
+
+
+2. Train: Fit the model on the training data
+
+
+3. Predict: Make a prediction for the next time step
+
+
+4. Evaluate: Calculate prediction error
+
+
+5. Roll Forward: Add the actual observed value to the training set, repeat the steps above
+
+
+
+🔽 Result After Walk-Forward Validation
+
+Improved Test MAE: 3.44
+This shows a significant improvement over the initial AR model's test error (5.17).
+
+
+
+---
+
+📌 Key Insights
+
+AR models can effectively model stable time series environments with strong autocorrelation
+
+Optimal lag selection using ACF/PACF is critical to model performance
+
+Walk-forward validation provides a realistic and more accurate assessment of time series model performance
+
+Prediction accuracy improves as the model continually adapts to recent trends
+
+
+
+---
